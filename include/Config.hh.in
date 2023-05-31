@@ -1,0 +1,11 @@
+
+// -*- C++ -*-
+#ifndef BDECAYLLP_Config_HH
+#define BDECAYLLP_Config_HH
+
+#define PYTHIAXML_PATH "@Pythia8_XMLDOC_DIR@"
+
+#cmakedefine HAVE_PY83
+
+
+#endif
