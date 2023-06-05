@@ -1,6 +1,7 @@
 # set minimum required cmake version
 #cmake_minimum_required (VERSION 3.7 FATAL_ERROR)
 cmake_minimum_required (VERSION 3.2 FATAL_ERROR)
+project(BDecayLLP)
 
 # make sure we are not going to build in the main source directory
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)

@@ -10,11 +10,7 @@
 
 #include "Pythia8/Pythia.h"
 
-#ifndef HAVE_PY83
 #include "Pythia8Plugins/HepMC2.h"
-#else
-#include "HepMCInterface.h"
-#endif
 
 #include "HepMC/GenEvent.h"
 #include "HepMC/IO_GenEvent.h"
@@ -274,7 +270,6 @@ int main(int argc, char *argv[]) {
 
     Pythia pythia{PYTHIAXML_PATH};
     Event& event = pythia.event;
-    Info &info = pythia.info;
     initMainPythia(pythia, llpParams, runOptions);
 
     int countBad = 0;
@@ -314,14 +309,15 @@ int main(int argc, char *argv[]) {
             // Generate events.  Skip if error.
             if (!pythia.next()) continue;
 
-            double pTHat = info.pTHat();
-            if (iRun == 0 && info.isNonDiffractive() && pTHat > 20.) continue;
+            double pTHat = pythia.info.pTHat();
+            if (iRun == 0 && pythia.info.isNonDiffractive() && pTHat > 20.) continue;
 
-            double baseWeight = info.weight();
+            double baseWeight = pythia.info.weight();
             tmpw.fill(pTHat, baseWeight);
             tmpw2.fill(pTHat, baseWeight * baseWeight);
 
-            info.updateWeight(wgtBdecay * baseWeight);
+	    // this requires new syntax, but I'm not sure what it is (because pythia.org docs are down)
+            // pythia.info.updateWeight(wgtBdecay * baseWeight);
             size_t found = 0;
             for (int i = 0; i < event.size(); ++i) { // find LLP that decays in the detector volume?
                 if (event[i].iBotCopy() == i) {
@@ -353,8 +349,8 @@ int main(int argc, char *argv[]) {
         pythia.readString("Stat:showPartonLevel = on");
         pythia.stat();
 
-        double sigmaNorm = info.sigmaGen() / info.weightSum();
-        cout << "Scale Factor: " + to_string(sigmaNorm) << endl << "From sigma generated: " << to_string(info.sigmaGen()) << "mb  and sum of weights generated: " << to_string(info.weightSum()) << endl;
+        double sigmaNorm = pythia.info.sigmaGen() / pythia.info.weightSum();
+        cout << "Scale Factor: " + to_string(sigmaNorm) << endl << "From sigma generated: " << to_string(pythia.info.sigmaGen()) << "mb  and sum of weights generated: " << to_string(pythia.info.weightSum()) << endl;
         cout << "# of events with multiple LLP in acceptance in " << to_string(2.0*runOptions.nEventTried/1000) << "k events tried and " <<  to_string(eventsWritten/1000.0) << "k written: " <<  to_string(countBad) << endl;
         pTw += sigmaNorm * tmpw;
         pTw2 += sigmaNorm * sigmaNorm * tmpw2;
