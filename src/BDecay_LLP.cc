@@ -10,11 +10,11 @@
 
 #include "Pythia8/Pythia.h"
 
-#ifndef HAVE_PY83
+//#ifndef HAVE_PY83
 #include "Pythia8Plugins/HepMC2.h"
-#else
-#include "HepMCInterface.h"
-#endif
+//#else
+//#include "HepMCInterface.h"
+//#endif
 
 #include "HepMC/GenEvent.h"
 #include "HepMC/IO_GenEvent.h"
@@ -265,16 +265,16 @@ int main(int argc, char *argv[]) {
     double sigma2 = sigma * sigma;
 
     // Generator.
-#ifndef HAVE_PY83
+//#ifndef HAVE_PY83
     HepMC::Pythia8ToHepMC toHepMC;
-#else
-    HepMC::I_Pythia8 toHepMC;
-#endif
+//#else
+//    HepMC::I_Pythia8 toHepMC;
+//#endif
     HepMC::IO_GenEvent output_hepmc(runOptions.path + runOptions.baseName + ".hepmc", std::ios::out);
 
     Pythia pythia{PYTHIAXML_PATH};
     Event& event = pythia.event;
-    Info &info = pythia.info;
+    Info info = pythia.info;
     initMainPythia(pythia, llpParams, runOptions);
 
     int countBad = 0;
